@@ -4,7 +4,8 @@ require 'JSON'
 require 'nokogiri'
 
 puts "Enter your address"
-current_address = "1061 Market St San Francisco, CA"
+current_address = gets.chomp
+
 geocode_link = Addressable::URI.new(
   :scheme => "http",
   :host => "maps.googleapis.com",
@@ -53,8 +54,6 @@ directions_response = RestClient.get(directions_link.to_s)
 
 routes = JSON.parse(directions_response)["routes"]
 
-
-
 html_instructions = []
 routes.each do |route|
   route["legs"].each do |leg|
@@ -64,39 +63,8 @@ routes.each do |route|
   end
 end
 
-puts html_instructions
-
 complete_instructions = html_instructions.map do |instruction|
-  Nokogiri::HTML(instruction)
+  Nokogiri::HTML(instruction).text
 end
 
 p complete_instructions.join(", ")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# legs.each do |key, val|
-#
-#   puts "#{key} #{val}"
-#   puts
-# end
